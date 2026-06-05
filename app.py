@@ -79,21 +79,11 @@ def generate():
     text = data.get("text", "")
 
     response = client.responses.create(
-        model="gpt-5.4",
+        model="gpt-5.4-nano",
         input=[
             {
                 "role": "system",
-                "content": """
-Return ONLY valid JSON in this format:
-
-{
-  "text": "sentence with [1] [2] blanks",
-  "answers": {
-    "1": "in",
-    "2": "die"
-  }
-}
-"""
+                "content": PROMPT
             },
             {
                 "role": "user",
