@@ -113,6 +113,8 @@ async function generateExercise() {
         });
 
         const data = await response.json();
+        // 🔥 DEBUG: show raw JSON
+        alert(JSON.stringify(data, null, 2));
 
         // ✅ HERE is the correct place
         const answers = data.answers;
