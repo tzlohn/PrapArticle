@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>German Preposition Exercise Generator</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+}
+
+.section{
+    margin-bottom:30px;
+}
+
+textarea{
+    width:100%;
+    height:250px;
+    font-size:18px;
+}
+
+button{
+    margin-top:10px;
+    padding:10px 20px;
+    font-size:18px;
+    cursor:pointer;
+}
+
+#output{
+    min-height:250px;
+    border:1px solid #ccc;
+    padding:15px;
+    white-space:pre-wrap;
+    font-size:20px;
+    line-height:2;
+}
+
+.blank{
+    display:inline-block;
+    width:90px;
+    border-bottom:2px dashed black;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>German Preposition Exercise Generator</h1>
+
+<div class="section">
+
+<h2>Input German Text</h2>
+
+<textarea id="inputText"></textarea>
+
+<br>
+
+<button onclick="generateExercise()">
+Generate Exercise
+</button>
+
+</div>
+
+<div class="section">
+
+<h2>Exercise</h2>
+
+<div id="output"></div>
+
+</div>
+
+<script>
+
+async function generateExercise(){
+
+    const text =
+        document.getElementById("inputText").value;
+
+    const response = await fetch("/generate",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            text:text
+        })
+    });
+
+    const data = await response.json();
+
+    document.getElementById("output").innerText =
+        data.result;
+}
+
+</script>
+
+</body>
+</html>
