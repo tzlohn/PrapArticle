@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 client = OpenAI(
-    api_key=os.environ["OPENAI_API_KEY"]
+    api_key=os.environ["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"]
 )
 
 PROMPT = """
