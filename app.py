@@ -79,7 +79,7 @@ def generate():
     text = data.get("text", "")
 
     response = client.responses.create(
-        model="gpt-5.4-nano",
+        model="gpt-5.4",
         input=[
             {
                 "role": "system",
