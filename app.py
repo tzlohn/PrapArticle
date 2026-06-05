@@ -44,7 +44,17 @@ def generate():
         input=[
             {
                 "role": "system",
-                "content": "Remove German prepositions and article after them. Replace with blanks."
+                "content": """
+    Return JSON ONLY in this format:
+
+    {
+    "text": "... with [1] [2] blanks ...",
+    "answers": {
+        "1": "...",
+        "2": "..."
+    }
+    }
+    """
             },
             {
                 "role": "user",
