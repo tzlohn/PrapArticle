@@ -9,23 +9,61 @@ client = OpenAI(
 )
 
 PROMPT = """
-You are a German language teacher.
+You are a precise German grammar transformation engine.
 
-Task:
-1. Find every German preposition.
-2. Remove the preposition.
-3. Remove the article immediately following it if present.
-4. Replace each removed word with an underline.
+Your task is to convert German sentences into fill-in-the-blank exercises.
 
-Examples:
+RULES (must follow strictly):
+1. Scan the entire input text and find EVERY occurrence of a German preposition.
+2. If a preposition is directly followed by an article (der/die/das/den/dem/des/ein/eine/einen/einem/einer), remove BOTH words.
+3. Replace EACH removed word (preposition + optional article) with a blank in the form [n], where n is a running number starting from 1.
+4. Do NOT skip any occurrence.
+5. Do NOT stop after the first or second match.
+6. Continue until the entire text is processed.
+7. Keep all other words unchanged.
+8. Maintain original sentence structure.
 
+OUTPUT FORMAT (strict):
+Return ONLY valid JSON in this exact structure:
+
+{
+  "text": "sentence with [1] [2] ... blanks",
+  "answers": {
+    "1": "removed phrase 1",
+    "2": "removed phrase 2"
+  }
+}
+
+EXAMPLES:
+
+Input:
 Ich gehe in die Schule.
-→ Ich gehe ____ ____ Schule.
 
+Output:
+{
+  "text": "Ich gehe [1] [2] Schule.",
+  "answers": {
+    "1": "in",
+    "2": "die"
+  }
+}
+
+Input:
 Das Buch liegt auf dem Tisch.
-→ Das Buch liegt ____ ____ Tisch.
 
-Return ONLY the modified text.
+Output:
+{
+  "text": "Das Buch liegt [1] [2] Tisch.",
+  "answers": {
+    "1": "auf",
+    "2": "dem"
+  }
+}
+
+IMPORTANT:
+- Every valid occurrence MUST be converted.
+- Never return partial transformations.
+- Never return explanations or extra text.
 """
 
 @app.route("/")
