@@ -43,6 +43,26 @@ button{
 .blank {
     width: 60px;
     display: inline-block;
+    padding: 5px;
+    font-size: 18px;
+}
+
+.blank.correct {
+    background-color: lightblue;
+    color: blue;
+    border: 2px solid blue;
+}
+
+.blank.incorrect {
+    background-color: lightcoral;
+    color: red;
+    border: 2px solid red;
+}
+
+.correction {
+    color: red;
+    font-weight: bold;
+    margin-left: 5px;
 }
 
 </style>
@@ -89,12 +109,12 @@ async function generateExercise() {
 
         const answers = data.answers;
 
-        output.innerHTML = renderExercise(data);
-
-        status.textContent = "✅ Finished";
-
-        // (optional) store globally for later checking
+        // Store globally for answer checking
         window.currentAnswers = answers;
+
+        renderExercise(data);
+
+        status.textContent = "✅ Finished (press Enter after typing)";
 
     } catch (error) {
 
@@ -113,7 +133,41 @@ function renderExercise(data) {
         return `<input class="blank" data-id="${id}">`;
     });
 
-    return html;
+    const output = document.getElementById("output");
+    output.innerHTML = html;
+
+    // Add event listeners to all blank inputs
+    const blanks = output.querySelectorAll(".blank");
+    blanks.forEach(blank => {
+        blank.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                checkAnswer(blank);
+            }
+        });
+    });
+}
+
+function checkAnswer(inputElement) {
+    const id = inputElement.getAttribute("data-id");
+    const userAnswer = inputElement.value.trim();
+    const correctAnswer = window.currentAnswers[id];
+
+    if (!correctAnswer) {
+        return;
+    }
+
+    // Case-insensitive comparison
+    if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+        inputElement.classList.remove("incorrect");
+        inputElement.classList.add("correct");
+        inputElement.value = correctAnswer;
+        inputElement.disabled = true;
+    } else {
+        inputElement.classList.remove("correct");
+        inputElement.classList.add("incorrect");
+        inputElement.value = correctAnswer;
+        inputElement.disabled = true;
+    }
 }
 
 // Auto-load exercise on page load
