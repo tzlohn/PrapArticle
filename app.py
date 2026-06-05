@@ -36,14 +36,15 @@ def home():
 @app.route("/generate", methods=["POST"])
 def generate():
 
-    text = request.json["text"]
+    data = request.get_json()
+    text = data.get("text", "")
 
     response = client.responses.create(
         model="gpt-5",
         input=[
             {
                 "role": "system",
-                "content": PROMPT
+                "content": "Remove German prepositions and article after them. Replace with blanks."
             },
             {
                 "role": "user",
@@ -58,4 +59,4 @@ def generate():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
