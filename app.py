@@ -15,8 +15,8 @@ Your task is to convert German sentences into fill-in-the-blank exercises.
 
 RULES (must follow strictly):
 1. Scan the entire input text and find EVERY occurrence of a German preposition.
-2. If a preposition is directly followed by an article (der/die/das/den/dem/des/ein/eine/einen/einem/einer), remove BOTH words.
-3. Replace EACH removed word (preposition + optional article) with a blank in the form [n], where n is a running number starting from 1.
+2. If a preposition is directly followed by an article (der, die, das, den, dem, des, ein, eine, einen, einem, einer), remove BOTH words.
+3. EACH removed word (preposition and article) must be replaced with its own blank in the form [n], where n is a running number starting from 1.
 4. Do NOT skip any occurrence.
 5. Do NOT stop after the first or second match.
 6. Continue until the entire text is processed.
@@ -29,8 +29,8 @@ Return ONLY valid JSON in this exact structure:
 {
   "text": "sentence with [1] [2] ... blanks",
   "answers": {
-    "1": "removed phrase 1",
-    "2": "removed phrase 2"
+    "1": "removed word 1",
+    "2": "removed word 2"
   }
 }
 
@@ -62,6 +62,7 @@ Output:
 
 IMPORTANT:
 - Every valid occurrence MUST be converted.
+- Each removed word must get its own blank.
 - Never return partial transformations.
 - Never return explanations or extra text.
 """
