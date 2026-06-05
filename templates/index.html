@@ -46,10 +46,14 @@ button{
     font-weight: bold;
 }
 
-.blank{
-    display:inline-block;
-    width:90px;
-    border-bottom:2px dashed black;
+.blank {
+    width: 80px;
+    border: none;
+    border-bottom: 2px dashed black;
+    text-align: center;
+    font-size: 16px;
+    outline: none;
+    margin: 0 5px;
 }
 
 </style>
@@ -68,7 +72,7 @@ button{
 <br>
 
 <button onclick="generateExercise()">
-介系詞與冠詞練習生成器
+練習生成
 </button>
 
 </div>
@@ -115,7 +119,7 @@ async function generateExercise() {
 
         const data = await response.json();
 
-        output.innerText = data.result;
+        output.innerText = renderExercise(data);
 
         status.textContent = "✅ Finished";
 
@@ -127,6 +131,18 @@ async function generateExercise() {
             "❌ Error while generating exercise.";
 
     }
+}
+
+function renderExercise(data) {
+
+    let html = data.text;
+
+    // Replace [1], [2], etc. with input boxes
+    html = html.replace(/\[(\d+)\]/g, (match, id) => {
+        return `<input class="blank" data-id="${id}">`;
+    });
+
+    document.getElementById("output").innerHTML = html;
 }
 
 </script>
