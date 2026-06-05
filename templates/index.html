@@ -39,6 +39,13 @@ button{
     line-height:2;
 }
 
+#status {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .blank{
     display:inline-block;
     width:90px;
@@ -61,7 +68,7 @@ button{
 <br>
 
 <button onclick="generateExercise()">
-Generate Exercise
+介系詞與冠詞練習生成器
 </button>
 
 </div>
@@ -70,31 +77,56 @@ Generate Exercise
 
 <h2>Exercise</h2>
 
+<div id="status"></div>
+
 <div id="output"></div>
 
 </div>
 
 <script>
 
-async function generateExercise(){
+async function generateExercise() {
 
     const text =
         document.getElementById("inputText").value;
 
-    const response = await fetch("/generate",{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-            text:text
-        })
-    });
+    const status =
+        document.getElementById("status");
 
-    const data = await response.json();
+    const output =
+        document.getElementById("output");
 
-    document.getElementById("output").innerText =
-        data.result;
+    status.textContent =
+        "🤖 GPT is generating your exercise...";
+
+    output.innerHTML = "";
+
+    try {
+
+        const response = await fetch("/generate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                text: text
+            })
+        });
+
+        const data = await response.json();
+
+        output.innerText = data.result;
+
+        status.textContent = "✅ Finished";
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "❌ Error while generating exercise.";
+
+    }
 }
 
 </script>
