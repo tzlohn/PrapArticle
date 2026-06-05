@@ -13,18 +13,23 @@ def home():
 
 @app.route("/generate", methods=["GET"])
 def generate():
+    # Check if API key is set
+    if not os.environ.get("OPENAI_API_KEY"):
+        return jsonify({"error": "OPENAI_API_KEY environment variable is not set"}), 500
+    
     # Generate German text using OpenAI GPT API
     prompt = "Please help me to generate a 100-word german text in A2 level"
     
     try:
         response = client.chat.completions.create(
-            model="gpt-5.4-nano",
+            model="gpt-3.5-turbo",
             max_tokens=500,
             messages=[{"role": "user", "content": prompt}]
         )
         generated_text = response.choices[0].message.content
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print(f"[ERROR] OpenAI API error: {str(e)}")
+        return jsonify({"error": f"Failed to generate text: {str(e)}"}), 500
 
     # Process the generated text: remove prepositions and articles
     ARTICLES = {"der", "die", "das", "den", "dem", "des", "ein", "eine", "einen", "einem", "einer"}
