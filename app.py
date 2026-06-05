@@ -1,21 +1,32 @@
 from flask import Flask, render_template, request, jsonify
-#from openai import OpenAI
+from openai import OpenAI
 import os,re
 
 app = Flask(__name__)
+
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-@app.route("/generate", methods=["POST"])
+@app.route("/generate", methods=["GET"])
 def generate():
+    # Generate German text using OpenAI GPT API
+    prompt = "Please help me to generate a 100-word german text in A2 level"
+    
+    try:
+        response = client.chat.completions.create(
+            model="gpt-5.4-nano",
+            max_tokens=500,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        generated_text = response.choices[0].message.content
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-    data = request.get_json()
-    text = data.get("text", "")
-
-    # Build a regex that matches a preposition optionally followed by an article.
+    # Process the generated text: remove prepositions and articles
     ARTICLES = {"der", "die", "das", "den", "dem", "des", "ein", "eine", "einen", "einem", "einer"}
 
     preps_alternation = r"|".join(re.escape(p) for p in sorted(GERMAN_PREPOSITIONS, key=len, reverse=True))
@@ -40,15 +51,11 @@ def generate():
 
         return " ".join(parts)
 
-    new_text = pattern.sub(repl, text)
-
-    # Debug: log received text to server console and include it in response
-    print("[generate] received text:", repr(text))
+    new_text = pattern.sub(repl, generated_text)
 
     response = {
         "text": new_text,
-        "answers": answers,
-        "received_text": text
+        "answers": answers
     }
 
     return jsonify(response)

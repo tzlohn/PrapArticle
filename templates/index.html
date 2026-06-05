@@ -17,12 +17,6 @@ body{
     margin-bottom:30px;
 }
 
-textarea{
-    width:100%;
-    height:250px;
-    font-size:18px;
-}
-
 button{
     margin-top:10px;
     padding:10px 20px;
@@ -60,34 +54,19 @@ button{
 
 <div class="section">
 
-<h2>Input German Text</h2>
-
-<textarea id="inputText"></textarea>
-
-<br>
-
-<button onclick="generateExercise()">
-練習生成
-</button>
-
-</div>
-
-<div class="section">
-
 <h2>Exercise</h2>
 
 <div id="status"></div>
 
 <div id="output"></div>
 
+<button onclick="generateExercise()">Load New Exercise</button>
+
 </div>
 
 <script>
 
 async function generateExercise() {
-
-    const text =
-        document.getElementById("inputText").value;
 
     const status =
         document.getElementById("status");
@@ -96,27 +75,18 @@ async function generateExercise() {
         document.getElementById("output");
 
     status.textContent =
-        "🤖 GPT is generating your exercise...";
+        "🤖 Generating a German exercise...";
 
     output.innerHTML = "";
 
     try {
 
         const response = await fetch("/generate", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                text: text
-            })
+            method: "GET"
         });
 
         const data = await response.json();
-        // 🔥 DEBUG: show raw JSON
-        alert(JSON.stringify(data, null, 2));
 
-        // ✅ HERE is the correct place
         const answers = data.answers;
 
         output.innerHTML = renderExercise(data);
@@ -145,6 +115,9 @@ function renderExercise(data) {
 
     return html;
 }
+
+// Auto-load exercise on page load
+window.addEventListener("load", generateExercise);
 
 </script>
 
