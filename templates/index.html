@@ -47,13 +47,8 @@ button{
 }
 
 .blank {
-    width: 80px;
-    border: none;
-    border-bottom: 2px dashed black;
-    text-align: center;
-    font-size: 16px;
-    outline: none;
-    margin: 0 5px;
+    width: 60px;
+    display: inline-block;
 }
 
 </style>
@@ -119,9 +114,15 @@ async function generateExercise() {
 
         const data = await response.json();
 
-        output.innerText = renderExercise(data);
+        // ✅ HERE is the correct place
+        const answers = data.answers;
+
+        output.innerHTML = renderExercise(data);
 
         status.textContent = "✅ Finished";
+
+        // (optional) store globally for later checking
+        window.currentAnswers = answers;
 
     } catch (error) {
 
@@ -129,7 +130,6 @@ async function generateExercise() {
 
         status.textContent =
             "❌ Error while generating exercise.";
-
     }
 }
 
@@ -137,12 +137,11 @@ function renderExercise(data) {
 
     let html = data.text;
 
-    // Replace [1], [2], etc. with input boxes
     html = html.replace(/\[(\d+)\]/g, (match, id) => {
         return `<input class="blank" data-id="${id}">`;
     });
 
-    document.getElementById("output").innerHTML = html;
+    return html;
 }
 
 </script>
