@@ -22,7 +22,7 @@ def generate():
     
     try:
         response = client.chat.completions.create(
-            model="gpt-5.4-mini",
+            model="gpt-3.5-turbo",
             max_tokens=500,
             messages=[{"role": "user", "content": prompt}]
         )
