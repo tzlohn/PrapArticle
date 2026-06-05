@@ -45,16 +45,16 @@ def generate():
             {
                 "role": "system",
                 "content": """
-    Return JSON ONLY in this format:
+Return ONLY valid JSON in this format:
 
-    {
-    "text": "... with [1] [2] blanks ...",
-    "answers": {
-        "1": "...",
-        "2": "..."
-    }
-    }
-    """
+{
+  "text": "sentence with [1] [2] blanks",
+  "answers": {
+    "1": "in",
+    "2": "die"
+  }
+}
+"""
             },
             {
                 "role": "user",
@@ -63,9 +63,11 @@ def generate():
         ]
     )
 
-    return jsonify({
-        "result": response.output_text
-    })
+    # 🔥 IMPORTANT FIX: parse JSON string into Python dict
+    import json
+    result = json.loads(response.output_text)
+
+    return jsonify(result)
 
 
 if __name__ == "__main__":
