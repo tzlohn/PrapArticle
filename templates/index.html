@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>!!介系詞+冠詞練習機!!</title>
 
 <style>
@@ -65,6 +66,41 @@ button{
     margin-left: 5px;
 }
 
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    button {
+        font-size: 20px;
+        padding: 12px 24px;
+    }
+
+    #output {
+        font-size: 24px;
+        padding: 20px;
+    }
+
+    #status {
+        font-size: 20px;
+    }
+
+    .blank {
+        width: 70px;
+        font-size: 20px;
+        padding: 8px;
+    }
+}
+
 </style>
 </head>
 
@@ -114,7 +150,7 @@ async function generateExercise() {
 
         renderExercise(data);
 
-        status.textContent = "✅ Finished (press Enter after typing)";
+        status.textContent = "✅ Finished (press Enter or tap away after typing)";
 
     } catch (error) {
 
@@ -139,8 +175,15 @@ function renderExercise(data) {
     // Add event listeners to all blank inputs
     const blanks = output.querySelectorAll(".blank");
     blanks.forEach(blank => {
+        // Desktop: Enter key
         blank.addEventListener("keypress", (e) => {
             if (e.key === "Enter") {
+                checkAnswer(blank);
+            }
+        });
+        // Mobile/Apple: blur event when user leaves the field
+        blank.addEventListener("blur", (e) => {
+            if (blank.value.trim() !== "") {
                 checkAnswer(blank);
             }
         });
