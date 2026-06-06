@@ -19,13 +19,17 @@ def generate():
     
     topic = request.args.get("topic", "office")
     dialogue = request.args.get("dialogue", "false").lower() in ("true", "1", "yes", "on")
+    level = request.args.get("level", "B1").upper()
 
     if topic not in {"office", "shopping", "restaurant", "family", "Rathaus", "travel"}:
         topic = "office"
 
+    if level not in {"A2", "B1", "B2", "C1"}:
+        level = "B1"
+
     dialogue_text = " in dialogue mode" if dialogue else ""
     prompt = (
-        f"Please help me to generate a 100-word german text in B1 level with a topic of {topic}{dialogue_text}. "
+        f"Please help me to generate a 100-word german text in {level} level with a topic of {topic}{dialogue_text}. "
         f"In the text, please use fewer 'in' and 'zu'"
     )
     

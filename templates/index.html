@@ -154,9 +154,18 @@ button{
         <option value="family">family</option>
         <option value="Rathaus">Rathaus</option>
         <option value="travel">travel</option>
+        <option value="school">school</option>
+    </select>
+    <label for="level-select">等級</label>
+    <select id="level-select">
+        <option value="A2">A2</option>
+        <option value="B1" selected>B1</option>
+        <option value="B2">B2</option>
+        <option value="C1">C1</option>
     </select>
     <label class="checkbox-label"><input id="dialogue-mode" type="checkbox"> 對話模式</label>
-    <button id="load-button" onclick="generateExercise()">Load New Exercise</button>
+    <button id="load-button" onclick="generateExercise()">Generate exercise</button>
+    <button id="copy-button" onclick="copyFullText()">複製全文供其它工具作文法檢查</button>
 </div>
 
 <div id="status"></div>
@@ -184,9 +193,10 @@ async function generateExercise() {
 
         const topic = document.getElementById("topic-select").value;
         const dialogue = document.getElementById("dialogue-mode").checked;
+        const level = document.getElementById("level-select").value;
 
         const response = await fetch(
-            `/generate?topic=${encodeURIComponent(topic)}&dialogue=${encodeURIComponent(dialogue)}`,
+            `/generate?topic=${encodeURIComponent(topic)}&dialogue=${encodeURIComponent(dialogue)}&level=${encodeURIComponent(level)}`,
             { method: "GET" }
         );
 
@@ -260,6 +270,39 @@ function checkAnswer(inputElement) {
         inputElement.classList.add("incorrect");
         inputElement.value = correctAnswer;
         inputElement.disabled = true;
+    }
+}
+
+function copyFullText() {
+    const output = document.getElementById('output');
+    if (!output) return;
+
+    // Clone output and replace input elements with their current values
+    const clone = output.cloneNode(true);
+    const inputs = clone.querySelectorAll('input.blank');
+    inputs.forEach(i => {
+        const span = document.createElement('span');
+        span.textContent = i.value || '';
+        i.parentNode.replaceChild(span, i);
+    });
+
+    // Use innerText to preserve visible line breaks
+    const text = clone.innerText;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            const status = document.getElementById('status');
+            if (status) status.textContent = '✅ Copied full text to clipboard';
+        }).catch(err => {
+            console.error('Copy failed', err);
+        });
+    } else {
+        // Fallback
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(textarea);
     }
 }
 
