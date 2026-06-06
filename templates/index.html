@@ -18,6 +18,30 @@ body{
     margin-bottom:30px;
 }
 
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.controls label {
+    font-size: 18px;
+}
+
+.controls select {
+    font-size: 18px;
+    padding: 6px 10px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 18px;
+}
+
 button{
     margin-top:10px;
     padding:10px 20px;
@@ -76,6 +100,11 @@ button{
         padding: 10px;
     }
 
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
     h1 {
         font-size: 28px;
     }
@@ -116,11 +145,23 @@ button{
 
 <h2>Exercise</h2>
 
+<div class="controls">
+    <label for="topic-select">文字情境</label>
+    <select id="topic-select">
+        <option value="office">office</option>
+        <option value="shopping">shopping</option>
+        <option value="restaurant">restaurant</option>
+        <option value="family">family</option>
+        <option value="Rathaus">Rathaus</option>
+        <option value="travel">travel</option>
+    </select>
+    <label class="checkbox-label"><input id="dialogue-mode" type="checkbox"> 對話模式</label>
+    <button id="load-button" onclick="generateExercise()">Load New Exercise</button>
+</div>
+
 <div id="status"></div>
 
 <div id="output"></div>
-
-<button onclick="generateExercise()">Load New Exercise</button>
 
 </div>
 
@@ -141,9 +182,13 @@ async function generateExercise() {
 
     try {
 
-        const response = await fetch("/generate", {
-            method: "GET"
-        });
+        const topic = document.getElementById("topic-select").value;
+        const dialogue = document.getElementById("dialogue-mode").checked;
+
+        const response = await fetch(
+            `/generate?topic=${encodeURIComponent(topic)}&dialogue=${encodeURIComponent(dialogue)}`,
+            { method: "GET" }
+        );
 
         const data = await response.json();
 
@@ -218,8 +263,7 @@ function checkAnswer(inputElement) {
     }
 }
 
-// Auto-load exercise on page load
-window.addEventListener("load", generateExercise);
+// Auto-load is disabled so the user can choose a topic and options first
 
 </script>
 

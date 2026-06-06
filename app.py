@@ -17,8 +17,17 @@ def generate():
     if not os.environ.get("OPENAI_API_KEY"):
         return jsonify({"error": "OPENAI_API_KEY environment variable is not set"}), 500
     
-    # Generate German text using OpenAI GPT API
-    prompt = "Please help me to generate a 100-word german text in B1 level. In the text, please use fewer 'in' and 'zu'"
+    topic = request.args.get("topic", "office")
+    dialogue = request.args.get("dialogue", "false").lower() in ("true", "1", "yes", "on")
+
+    if topic not in {"office", "shopping", "restaurant", "family", "Rathaus", "travel"}:
+        topic = "office"
+
+    dialogue_text = " in dialogue mode" if dialogue else ""
+    prompt = (
+        f"Please help me to generate a 100-word german text in B1 level with a topic of {topic}{dialogue_text}. "
+        f"In the text, please use fewer 'in' and 'zu'"
+    )
     
     try:
         response = client.chat.completions.create(
