@@ -68,7 +68,7 @@ def generate():
 GERMAN_PREPOSITIONS = {
     "an","am","auf","hinter","in","im","ins","neben","über","unter","vor","zwischen",
     "aus","außer","bei","mit","nach","seit","von","vom","zu","zum","zur","durch","für",
-    "gegen","ohne","um"}
+    "gegen","ohne","um","bis","ab","innerhalb","ans","aufs","hinterm","ins","neben","über","unterm"}
 
 word_re = re.compile(r"\b\w+\b", flags=re.UNICODE)
 prep_pattern = re.compile(

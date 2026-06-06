@@ -55,9 +55,13 @@ button{
 }
 
 .blank.incorrect {
-    background-color: lightcoral;
-    color: red;
-    border: 2px solid red;
+    background-color: lightcoral !important;
+    color: red !important;
+    border: 2px solid red !important;
+}
+
+.blank:disabled {
+    cursor: default;
 }
 
 .correction {
@@ -183,7 +187,8 @@ function renderExercise(data) {
         });
         // Mobile/Apple: blur event when user leaves the field
         blank.addEventListener("blur", (e) => {
-            if (blank.value.trim() !== "") {
+            // Only check if not already checked (not disabled)
+            if (!blank.disabled) {
                 checkAnswer(blank);
             }
         });
