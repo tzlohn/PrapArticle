@@ -18,7 +18,7 @@ def generate():
         return jsonify({"error": "OPENAI_API_KEY environment variable is not set"}), 500
     
     # Generate German text using OpenAI GPT API
-    prompt = "Please help me to generate a 100-word german text in A2 level"
+    prompt = "Please help me to generate a 100-word german text in B1 level"
     
     try:
         response = client.chat.completions.create(
