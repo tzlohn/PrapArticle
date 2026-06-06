@@ -139,7 +139,7 @@ button{
 
 <body>
 
-<h1>German Preposition Exercise Generator</h1>
+<h1>介系詞練習生成器</h1>
 
 <div class="section">
 
@@ -165,12 +165,15 @@ button{
     </select>
     <label class="checkbox-label"><input id="dialogue-mode" type="checkbox"> 對話模式</label>
     <button id="load-button" onclick="generateExercise()">Generate exercise</button>
-    <button id="copy-button" onclick="copyFullText()">複製全文供其它工具作文法檢查</button>
 </div>
 
 <div id="status"></div>
 
 <div id="output"></div>
+
+<div class="copy-area">
+    <button id="copy-button" onclick="copyFullText()" disabled>複製全文供其它工具作文法檢查</button>
+</div>
 
 </div>
 
@@ -184,8 +187,11 @@ async function generateExercise() {
     const output =
         document.getElementById("output");
 
+    const copyBtn = document.getElementById('copy-button');
+    if (copyBtn) copyBtn.disabled = true;
+
     status.textContent =
-        "🤖 Generating a German exercise...";
+        "GPT is generating an exercise...";
 
     output.innerHTML = "";
 
@@ -209,6 +215,12 @@ async function generateExercise() {
 
         renderExercise(data);
 
+        // Enable copy button only if there's visible text
+        if (copyBtn) {
+            const hasText = output && output.innerText && output.innerText.trim().length > 0;
+            copyBtn.disabled = !hasText;
+        }
+
         status.textContent = "✅ Finished (press Enter or tap away after typing)";
 
     } catch (error) {
@@ -217,6 +229,7 @@ async function generateExercise() {
 
         status.textContent =
             "❌ Error while generating exercise.";
+        if (copyBtn) copyBtn.disabled = true;
     }
 }
 
